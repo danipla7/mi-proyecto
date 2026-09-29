@@ -13,9 +13,18 @@ def calcular_iva(precio, tasa=0.21):
     """Calcula el IVA de un precio."""
     return precio * tasa
 
+def aplicar_descuento(precio, cantidad, descuento=0.10):
+    """Calcula un descuento por grandes compras"""
+    return precio * descuento if cantidad >= 40 else 0
+
 def calcular_total(datos, con_iva=True):
-    """Calcula el total de ventas, opcionalmente con IVA."""
+    """Calcula el total de ventas, opcionalmente con IVA y descuento"""
     total = sum(item["precio"] * item["cantidad"] for item in datos)
+    descuento_total = sum(
+        aplicar_descuento(item["precio"], item["cantidad"]) * item["cantidad"]
+        for item in datos
+    )
+    total -= descuento_total
     if con_iva:
         total += calcular_iva(total)
     return total
